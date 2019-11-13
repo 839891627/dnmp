@@ -6,6 +6,7 @@ services:
       args:
         PHP_VERSION: 7.1.32
     container_name: php-7.1
+    working_dir: /var/www
     volumes:
       - ./www:/var/www
     environment:
@@ -18,6 +19,7 @@ services:
       args:
         PHP_VERSION: 7.3.11
     container_name: php-7.3
+    working_dir: /var/www
     volumes:
       - ./www:/var/www
     environment:
