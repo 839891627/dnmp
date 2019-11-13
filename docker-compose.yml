@@ -9,9 +9,6 @@ services:
     working_dir: /var/www
     volumes:
       - ./www:/var/www
-    environment:
-      DB_PORT: 3306
-      DB_HOST: mysql
 
   php73:
     build:
@@ -22,17 +19,17 @@ services:
     working_dir: /var/www
     volumes:
       - ./www:/var/www
-    environment:
-      DB_PORT: 3306
-      DB_HOST: mysql
 
   nginx:
     image: nginx:latest
     container_name: nginx
+    depends_on:
+      - php71
+      - php73
     volumes:
-      - ./www:/var/www
-      - ./nginx:/etc/nginx
-      - ./logs/nginx:/var/log/nginx/
+      - ./www:/var/www # 需要和 php 的目录一致
+      - ./nginx:/etc/nginx  # nginx 配置
+      - ./logs/nginx:/var/log/nginx/  # nginx 日志
     ports:
       - 80:80
 
@@ -47,7 +44,7 @@ services:
       MYSQL_USER: lnmp
       MYSQL_PASSWORD: lnmp
     ports:
-      - 33061:3306
+      - 3306:3306
 
   redis:
     image: redis
@@ -55,9 +52,7 @@ services:
     volumes:
       - ./redis:/data
     ports:
-      - 63791:6379
-    expose:
-      - 6379 # 暴露出去给其他容器连接
+      - 6379:6379
 
 volumes:
   mysql:
