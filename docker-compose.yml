@@ -1,0 +1,43 @@
+version: "2"
+services:
+  php:
+    build:
+      context: .
+      args:
+        PHP_VERSION: ${PHP_VERSION} # 指定 php 版本号
+    working_dir: /var/www
+    container_name: php-${PHP_VERSION}
+    volumes:
+      - ./www:/var/www
+    environment:
+      DB_PORT: 3306
+      DB_HOST: mysql
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    working_dir: /var/www
+    volumes_from:
+      - php
+    volumes:
+      - ./nginx:/etc/nginx
+      - ./logs/nginx:/var/log/nginx/
+    ports:
+      - 80:80
+
+  mysql:
+    image: mysql:5.6
+    container_name: mysql5.6
+    volumes:
+      - mysql:/var/lib/mysql # 使用下面 volumes 定义的 mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: lnmp
+      MYSQL_PASSWORD: lnmp
+    ports:
+      - 33061:3306
+
+volumes:
+  mysql:
+
