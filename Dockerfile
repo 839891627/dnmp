@@ -5,8 +5,8 @@ FROM php:${PHP_VERSION}-fpm
 #COPY ./resources/sources.list /etc/apt/
 
 RUN apt-get update \
-    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev \
-    && docker-php-ext-install pdo_mysql mcrypt zip gd opcache bcmath
+    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev \
+    && docker-php-ext-install pdo_mysql zip gd opcache bcmath
 
 # 安装 php-redis 扩展。ADD 会复制并自动解压
 WORKDIR /tmp

@@ -7,4 +7,5 @@
 logs/
 mysql/
 www/
+redis
 

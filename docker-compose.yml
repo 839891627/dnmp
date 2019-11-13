@@ -1,12 +1,23 @@
 version: "2"
 services:
-  php:
+  php71:
     build:
       context: .
       args:
-        PHP_VERSION: ${PHP_VERSION} # 指定 php 版本号
-    working_dir: /var/www
-    container_name: php-${PHP_VERSION}
+        PHP_VERSION: 7.1.32
+    container_name: php-7.1
+    volumes:
+      - ./www:/var/www
+    environment:
+      DB_PORT: 3306
+      DB_HOST: mysql
+
+  php73:
+    build:
+      context: .
+      args:
+        PHP_VERSION: 7.3.11
+    container_name: php-7.3
     volumes:
       - ./www:/var/www
     environment:
@@ -16,10 +27,8 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
-    working_dir: /var/www
-    volumes_from:
-      - php
     volumes:
+      - ./www:/var/www
       - ./nginx:/etc/nginx
       - ./logs/nginx:/var/log/nginx/
     ports:
@@ -37,6 +46,16 @@ services:
       MYSQL_PASSWORD: lnmp
     ports:
       - 33061:3306
+
+  redis:
+    image: redis
+    container_name: redis
+    volumes:
+      - ./redis:/data
+    ports:
+      - 63791:6379
+    expose:
+      - 6379 # 暴露出去给其他容器连接
 
 volumes:
   mysql:
