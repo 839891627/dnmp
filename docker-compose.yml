@@ -10,6 +10,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./www:/var/www
+      - ./composer/php71:/root/.composer/
 
   php73:
     build:
@@ -21,6 +22,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./www:/var/www
+      - ./composer/php73:/root/.composer/
 
   nginx:
     image: nginx:latest

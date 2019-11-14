@@ -4,6 +4,7 @@
 
 # IntelliJ project files
 .idea
+composer
 logs/
 mysql/
 www/
