@@ -9,8 +9,8 @@ services:
     restart: always
     working_dir: /var/www
     volumes:
-      - ./www:/var/www
-      - ./composer/php71:/root/.composer/
+      - ${WEB_ROOT}:/var/www
+      - ${COMPOSER}/php71:/root/.composer/
 
 #  php73:
 #    build:
@@ -21,8 +21,8 @@ services:
 #    restart: always
 #    working_dir: /var/www
 #    volumes:
-#      - ./www:/var/www
-#      - ./composer/php73:/root/.composer/
+#      - ${WEB_ROOT}:/var/www
+#      - ${COMPOSER}/php73:/root/.composer/
 
   nginx:
     image: nginx:latest
@@ -32,30 +32,30 @@ services:
       - php71
 #      - php73
     volumes:
-      - ./www:/var/www # 需要和 php 的目录一致
-      - ./nginx:/etc/nginx  # nginx 配置
-      - ./logs/nginx:/var/log/nginx/  # nginx 日志
+      - ${WEB_ROOT}:/var/www # 需要和 php 的目录一致
+      - ${NGINX_CONF}:/etc/nginx  # nginx 配置
+      - ${LOG}/nginx:/var/log/nginx/  # nginx 日志
     ports:
-      - 80:80
+      - ${NGINX_PORT}:80
 
   mysql:
     image: mysql:5.6
     container_name: mysql5.6
     volumes:
-      - ./mysql:/var/lib/mysql
+      - ${MYSQL_DATA}:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: lnmp
-      MYSQL_PASSWORD: lnmp
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - 3306:3306
+      - ${MYSQL_PORT}:3306
 
   redis:
     image: redis
     container_name: redis
     restart: always
     volumes:
-      - ./redis:/data
+      - ${REDIS_DATA}:/data
     ports:
-      - 6379:6379
+      - ${REDIS_PORT}:6379

@@ -9,4 +9,5 @@ logs/
 mysql/
 www/
 redis
+nginx/conf.d
 
