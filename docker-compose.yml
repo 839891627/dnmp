@@ -12,17 +12,17 @@ services:
       - ${WEB_ROOT}:/var/www
       - ${COMPOSER}/php71:/root/.composer/
 
-#  php73:
-#    build:
-#      context: .
-#      args:
-#        PHP_VERSION: 7.3.11
-#    container_name: php-7.3
-#    restart: always
-#    working_dir: /var/www
-#    volumes:
-#      - ${WEB_ROOT}:/var/www
-#      - ${COMPOSER}/php73:/root/.composer/
+  php73:
+    build:
+      context: .
+      args:
+        PHP_VERSION: 7.3.11
+    container_name: php-7.3
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ${WEB_ROOT}:/var/www
+      - ${COMPOSER}/php73:/root/.composer/
 
   nginx:
     image: nginx:latest
@@ -30,7 +30,7 @@ services:
     restart: always
     depends_on:
       - php71
-#      - php73
+      - php73
     volumes:
       - ${WEB_ROOT}:/var/www # 需要和 php 的目录一致
       - ${NGINX_CONF}:/etc/nginx  # nginx 配置

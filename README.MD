@@ -25,3 +25,10 @@ docker-compose build php71
 
 ## 已知问题
 - DNS 查询很慢
+1.  `brew install dnsmasq`
+2. `/usr/local/etc/dnsmasq.conf` 里面配置 ` conf-file=/etc/dnsmasq.conf`
+3. 然后 `/etc/dnsmasq.conf` 文件内容
+ ```
+address=/.test/127.0.0.1
+listen-address=127.0.0.1
+```

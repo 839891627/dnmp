@@ -20,8 +20,8 @@ RUN mkdir -p /usr/src/php/ext \
     && docker-php-ext-install redis
 
 # 安装 node(npm) 前端后期问题太多了，直接宿主机安装
-#ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
-#RUN ln -s /tmp/node-v12.13.0-linux-x64/bin/node /usr/bin/node \
-#    && ln -s /tmp/node-v12.13.0-linux-x64/bin/npm /usr/bin/npm
+ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
+RUN ln -s /tmp/node-v12.13.0-linux-x64/bin/node /usr/bin/node \
+    && ln -s /tmp/node-v12.13.0-linux-x64/bin/npm /usr/bin/npm
 
 CMD php-fpm
