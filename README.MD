@@ -21,6 +21,24 @@ docker-compose build php71
 - composer
 - npm
 
+# fish shell 中直接运行 php composer
+```bash
+function composer
+    set p (pwd |xargs basename)
+    set pp /var/www/$p
+    docker exec -it -w $pp php-7.1 composer $argv
+end
+function php71
+    set p (pwd |xargs basename)
+    set pp /var/www/$p
+    docker exec -it -w $pp php-7.1 php $argv
+end
+function php73
+    set p (pwd |xargs basename)
+    set pp /var/www/$p
+    docker exec -it -w $pp php-7.3 php $argv
+end
+```
 
 
 ## 已知问题
