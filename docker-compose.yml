@@ -11,6 +11,8 @@ services:
     volumes:
       - ${WEB_ROOT}:/var/www
       - ${COMPOSER}/php71:/root/.composer/
+    environment:
+      TZ: "$TZ"
 
   php73:
     build:
@@ -23,6 +25,8 @@ services:
     volumes:
       - ${WEB_ROOT}:/var/www
       - ${COMPOSER}/php73:/root/.composer/
+    environment:
+      TZ: "$TZ"
 
   nginx:
     image: nginx:latest
@@ -37,6 +41,8 @@ services:
       - ${LOG}/nginx:/var/log/nginx/  # nginx 日志
     ports:
       - ${NGINX_PORT}:80
+    environment:
+      TZ: "$TZ"
 
   mysql:
     image: mysql:5.6
