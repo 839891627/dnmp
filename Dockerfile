@@ -13,14 +13,19 @@ RUN apt-get update \
 
 WORKDIR /tmp
 
-# 安装 php-redis 扩展。ADD 会复制并自动解压
 ADD ./resources/redis-5.1.1.tgz .
+ADD ./resources/Python-3.8.0.tgz .
+ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
+
+# 安装 redis 扩展
 RUN mkdir -p /usr/src/php/ext \
-    && mv redis-5.1.1 /usr/src/php/ext/redis \
+    && mv /tmp/redis-5.1.1 /usr/src/php/ext/redis \
     && docker-php-ext-install redis
 
-# 安装 node(npm) 前端后期问题太多了，直接宿主机安装
-ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
+# 安装 python3
+RUN cd /tmp/Python-3.8.0 && ./configure && make && make install && rm -rf /tmp/Python-3.8.0 Python-3.8.0.tgz
+
+# 安装 nodejs
 RUN ln -s /tmp/node-v12.13.0-linux-x64/bin/node /usr/bin/node \
     && ln -s /tmp/node-v12.13.0-linux-x64/bin/npm /usr/bin/npm
 

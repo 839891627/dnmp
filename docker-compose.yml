@@ -5,7 +5,7 @@ services:
       context: .
       args:
         PHP_VERSION: 7.1
-    container_name: php-7.1
+    container_name: php71
     restart: always
     working_dir: /var/www
     volumes:
@@ -19,7 +19,7 @@ services:
       context: .
       args:
         PHP_VERSION: 7.3
-    container_name: php-7.3
+    container_name: php73
     restart: always
     working_dir: /var/www
     volumes:
@@ -46,7 +46,7 @@ services:
 
   mysql:
     image: mysql:${MYSQL_VERSION}
-    container_name: mysql-${MYSQL_VERSION}
+    container_name: mysql
     volumes:
       - ${MYSQL_DATA}:/var/lib/mysql
     restart: always
@@ -59,7 +59,7 @@ services:
 
   redis:
     image: redis:${REDIS_VERSION}
-    container_name: redis${REDIS_VERSION}
+    container_name: redis
     restart: always
     volumes:
       - ${REDIS_DATA}:/data
