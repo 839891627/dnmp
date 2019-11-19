@@ -38,14 +38,16 @@ node/python等，本可以 apt-get 去直接安装，但是考虑到容器内每
 
 ```bash
     function composer
-        set p (pwd |xargs basename)
-        set pp /var/www/$p
-        docker exec -it -w $pp php71 composer $argv
+        set p (pwd)
+        set pp (string sub $p -s 35)
+        set ppp /var/www/$pp
+        docker exec -it -w $ppp php71 composer $argv
     end
     function php
-        set p (pwd |xargs basename)
-        set pp /var/www/$p
-        docker exec -it -w $pp php71 php $argv
+        set p (pwd)
+        set pp (string sub $p -s 35)
+        set ppp /var/www/$pp
+        docker exec -it -w $ppp php71 php $argv
     end
     function dc
         set p (pwd)

@@ -5,7 +5,8 @@ FROM php:${PHP_VERSION}-fpm
 #COPY ./resources/sources.list /etc/apt/
 
 RUN apt-get update \
-    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev \
+    && apt-get install -y --no-install-recommends apt-utils \
+    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev unzip\
     && docker-php-ext-install pdo_mysql zip gd opcache bcmath \
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
@@ -16,6 +17,7 @@ WORKDIR /tmp
 ADD ./resources/redis-5.1.1.tgz .
 ADD ./resources/Python-3.8.0.tgz .
 ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
+COPY ./resources/swoole-src-4.4.12.zip .
 
 # 安装 redis 扩展
 RUN mkdir -p /usr/src/php/ext \
@@ -28,5 +30,10 @@ RUN cd /tmp/Python-3.8.0 && ./configure && make && make install && rm -rf /tmp/P
 # 安装 nodejs
 RUN ln -s /tmp/node-v12.13.0-linux-x64/bin/node /usr/bin/node \
     && ln -s /tmp/node-v12.13.0-linux-x64/bin/npm /usr/bin/npm
+
+# 安装 swoole
+RUN cd /tmp && unzip swoole-src-4.4.12.zip \
+    && cd swoole-src-4.4.12 && phpize && ./configure \
+    && make && make install && rm -rf /tmp/swoole*
 
 CMD php-fpm
