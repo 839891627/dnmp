@@ -1,4 +1,34 @@
-# 运行
+## 继承的服务
+- mysql
+- php7.1/7.3
+- nginx
+- redis
+
+## 目录结构说明
+```
+├── Dockerfile # php镜像的构建脚本
+├── README.MD
+├── config    # 几个服务的配置文件目录
+│   ├── mysql
+│   ├── nginx
+│   └── php
+├── data        # 数据持久化目录
+│   ├── composer # 会用到缓存，所以持久化
+│   ├── mysql
+│   └── redis
+├── docker-compose.yml
+├── logs       # 目录只存放了 nginx
+│   └── nginx
+└── resources  # 预先准备的资源。 容器内 pecl/apt 安装下载太慢了，所以预准备
+    ├── Python-3.8.0.tgz
+    ├── node-v12.13.0-linux-x64.tar.xz
+    ├── redis-5.1.1.tgz
+    ├── sources.list
+    ├── swoole-src-4.4.12.zip
+    └── xdebug-2.8.0.tgz
+
+```
+## 运行
 ```
 docker-compose up -d
 ```

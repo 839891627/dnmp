@@ -14,21 +14,22 @@ services:
       - ${PHP71_INI}:/usr/local/etc/php/php.ini
     environment:
       TZ: "$TZ"
+      WEB_ENV: "local" # 信用飞项目使用
 
-  php73:
-    build:
-      context: .
-      args:
-        PHP_VERSION: 7.3
-    container_name: php73
-    restart: always
-    working_dir: /var/www
-    volumes:
-      - ${WEB_ROOT}:/var/www
-      - ${COMPOSER}/php73:/root/.composer/
-      - ${PHP73_INI}:/usr/local/etc/php/php.ini
-    environment:
-      TZ: "$TZ"
+#  php73:
+#    build:
+#      context: .
+#      args:
+#        PHP_VERSION: 7.3
+#    container_name: php73
+#    restart: always
+#    working_dir: /var/www
+#    volumes:
+#      - ${WEB_ROOT}:/var/www
+#      - ${COMPOSER}/php73:/root/.composer/
+#      - ${PHP73_INI}:/usr/local/etc/php/php.ini
+#    environment:
+#      TZ: "$TZ"
 
   nginx:
     image: nginx:latest
@@ -36,7 +37,7 @@ services:
     restart: always
     depends_on:
       - php71
-      - php73
+#      - php73
     volumes:
       - ${WEB_ROOT}:/var/www # 需要和 php 的目录一致
       - ${NGINX_CONF}:/etc/nginx/conf.d  # nginx 配置
