@@ -9,7 +9,7 @@ services:
     restart: always
     working_dir: /var/www
     volumes:
-      - ${WEB_ROOT}:/var/www
+      - ${WEB_ROOT}:/var/www:cached
       - ${COMPOSER}/php71:/root/.composer/
       - ${PHP71_INI}:/usr/local/etc/php/php.ini
     environment:
@@ -39,7 +39,7 @@ services:
       - php71
 #      - php73
     volumes:
-      - ${WEB_ROOT}:/var/www # 需要和 php 的目录一致
+      - ${WEB_ROOT}:/var/www:cached # 需要和 php 的目录一致
       - ${NGINX_CONF}:/etc/nginx/conf.d  # nginx 配置
       - ${LOG}/nginx:/var/log/nginx/  # nginx 日志
     ports:
