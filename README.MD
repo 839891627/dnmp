@@ -9,7 +9,6 @@
 ├── Dockerfile # php镜像的构建脚本
 ├── README.MD
 ├── config    # 几个服务的配置文件目录
-│   ├── mysql
 │   ├── nginx
 │   └── php
 ├── data        # 数据持久化目录
