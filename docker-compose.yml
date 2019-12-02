@@ -16,32 +16,23 @@ services:
       - ${PHP71_INI}:/usr/local/etc/php/php.ini
     environment:
       TZ: "$TZ"
-      WEB_ENV: "local" # 信用飞项目使用
-    ports: # hexo 需要 4000 端口
-      - 4000:4000
-    networks:
-      - fronted
-      - backend
 
-  #  php73:
-  #    build:
-  #      context: .
-  #      args:
-  #        PHP_VERSION: 7.3
-  #    container_name: php73
-  #    restart: always
-  #    working_dir: /var/www
-  #    depends_on:
-  #      - mysql
-  #    volumes:
-  #      - ${WEB_ROOT}:/var/www
-  #      - ${COMPOSER}/php73:/root/.composer/
-  #      - ${PHP73_INI}:/usr/local/etc/php/php.ini
-  #    environment:
-  #      TZ: "$TZ"
-  #    networks:
-  #      - fronted
-  #      - backend
+#  php73:
+#    build:
+#      context: .
+#      args:
+#        PHP_VERSION: 7.3
+#    container_name: php73
+#    restart: always
+#    working_dir: /var/www
+#    depends_on:
+#      - mysql
+#    volumes:
+#      - ${WEB_ROOT}:/var/www
+#      - ${COMPOSER}/php73:/root/.composer/
+#      - ${PHP73_INI}:/usr/local/etc/php/php.ini
+#    environment:
+#      TZ: "$TZ"
 
   nginx:
     image: nginx:latest
@@ -58,8 +49,6 @@ services:
       - ${NGINX_PORT}:80
     environment:
       TZ: "$TZ"
-    networks:
-      - fronted
 
   mysql:
     image: mysql:${MYSQL_VERSION}
@@ -74,8 +63,6 @@ services:
       TZ: "$TZ"
     ports:
       - ${MYSQL_PORT}:3306
-    networks:
-      - backend
 
   redis:
     image: redis:${REDIS_VERSION}
@@ -85,11 +72,3 @@ services:
       - ${REDIS_DATA}:/data
     ports:
       - ${REDIS_PORT}:6379
-    networks:
-      - backend
-
-# 定义两个前后端网络连接到同一个网络的容器，可以进行互连；而不同网络的容器则会被隔离。
-#  所以在这个例子中，nginx 可以和 php 服务进行互连，php 也可以和 mysql 服务互连，因为它们连接到了同一个网络中； 而 nginx 和 mysql 并不处于同一网络，所以二者无法通讯，这起到了隔离的作用。
-networks:
-  fronted:
-  backend:
