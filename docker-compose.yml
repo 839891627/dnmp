@@ -16,6 +16,9 @@ services:
       - ${PHP71_INI}:/usr/local/etc/php/php.ini
     environment:
       TZ: "$TZ"
+      WEB_ENV: "local" # 信用飞项目使用
+    ports: # hexo 需要 4000 端口
+      - 4000:4000
 
 #  php73:
 #    build:
@@ -70,5 +73,7 @@ services:
     restart: always
     volumes:
       - ${REDIS_DATA}:/data
+      - ${REDIS_CONF}:/usr/local/etc/redis/redis.conf
     ports:
       - ${REDIS_PORT}:6379
+    command: [redis-server, "/usr/local/etc/redis/redis.conf"]
