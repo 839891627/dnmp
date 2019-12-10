@@ -77,3 +77,14 @@ services:
     ports:
       - ${REDIS_PORT}:6379
     command: [redis-server, "/usr/local/etc/redis/redis.conf"]
+
+#  openresty:
+#    image: openresty/openresty:alpine
+#    container_name: openresty
+#    volumes:
+#      - ./config/openresty/nginx.conf:/etc/nginx/nginx.conf  # nginx 配置
+#      - ./config/openresty/conf.d:/etc/nginx/conf.d  # nginx 配置
+#    ports:
+#      - 8080:80
+#    environment:
+#      TZ: "$TZ"
