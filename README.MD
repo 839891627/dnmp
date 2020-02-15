@@ -108,13 +108,11 @@ node/python等，本可以 apt-get 去直接安装，但是考虑到容器内每
 ```
 
 
-## 已知问题
-- [x] DNS 查询很慢
-    1.  `brew install dnsmasq`
-    2. `/usr/local/etc/dnsmasq.conf` 里面配置 ` conf-file=/etc/dnsmasq.conf`
-    3. 然后 `/etc/dnsmasq.conf` 文件内容
-        > 配置了这个，新项目就不需要添加 hosts 了
-         ```
-            address=/.test/127.0.0.1
-            listen-address=127.0.0.1
-        ```
+## 统一设置 **.test** 域名到本地
+1.  `brew install dnsmasq`
+2. `/usr/local/etc/dnsmasq.conf` 里面配置 ` address=/.test/127.0.0.1`
+3. Create a dns resolver：
+    ```bash 
+       sudo mkdir -v /etc/resolver
+       sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+    ```
