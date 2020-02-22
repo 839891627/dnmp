@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   php71:
     build:
@@ -36,6 +36,8 @@ services:
 #      - ${PHP73_INI}:/usr/local/etc/php/php.ini
 #    environment:
 #      TZ: "$TZ"
+#    ports:
+#      - 9501:9501
 
   nginx:
     image: nginx:latest

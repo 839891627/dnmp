@@ -1,12 +1,13 @@
 ARG PHP_VERSION
 FROM php:${PHP_VERSION}-fpm
 
-# 替换源来加速。有个会报错，先不用吧。将docker走代理了。。
-#COPY ./resources/sources.list /etc/apt/
+# 替换源来加速
+COPY ./resources/sources.list /etc/apt/
 
-RUN apt-get update \
+RUN apt-get update -y \
     && apt-get install -y --no-install-recommends apt-utils \
     && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev unzip\
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql zip gd opcache bcmath \
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
