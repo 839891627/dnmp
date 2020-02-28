@@ -32,12 +32,13 @@
 ```
 ## 使用
 > 将此项目，克隆到你其他开发项目的平级目录
+
 启动/创建容器环境
-```
-docker-compose up -d
-```
+    ```
+    docker-compose up -d
+    ```
 ## 切换 php 版本
-- 开启 `docker-compose.yml` 内 **php73** 部分，然后 `docker-compose up -d php73`, `nginx.conf` 内 `fastcgi_pass php73:9000;` 即可
+开启 `docker-compose.yml` 内 **php73** 部分，然后 `docker-compose up -d php73`, `nginx.conf` 内 `fastcgi_pass php73:9000;` 即可
 
 ## 配置新开发项目
 1. 将项目放在同级目录
@@ -47,25 +48,25 @@ docker-compose up -d
        root        /var/www/项目名称/public或其他入口目录; 
     ```
 3. 配置宿主机 **hosts**，指定域名 `127.0.0.1 laravel.test`  
-> [可选项]这样用每个项目都得配置，比较麻烦，所以有以下方式快捷配置
+    > [可选项]这样用每个项目都得配置，比较麻烦，所以有以下方式快捷配置
 4. 项目中使用 mysql/redis 时，需要配置为 **容器名**。例如在 `laravel/env.php` 中
-```ini
-REDIS_HOST=redis  # 填写redis, 运行时容器会自动解析的。因为 docker ps 查看，得知 redis 的容器名叫做 "redis"
-# REDIS_HOST=127.0.0.1 # 而不是填写 ip
-REDIS_PASSWORD=null
-REDIS_PORT=6379
+    ```ini
+    REDIS_HOST=redis  # 填写redis, 运行时容器会自动解析的。因为 docker ps 查看，得知 redis 的容器名叫做 "redis"
+    # REDIS_HOST=127.0.0.1 # 而不是填写 ip
+    REDIS_PASSWORD=null
+    REDIS_PORT=6379
 
-DB_CONNECTION=mysql
-DB_HOST=mysql  # 同理，填写 mysql
-#DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=homestead
-DB_USERNAME=homestead
-DB_PASSWORD=secret
-```
-5. 执行 `php、composer` 等脚本
+    DB_CONNECTION=mysql
+    DB_HOST=mysql  # 同理，填写 mysql
+    #DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=homestead
+    DB_USERNAME=homestead
+    DB_PASSWORD=secret
+    ```
+5. 执行 `php、composer` 等脚本  
 需要进入容器内进行 `docker exec -it php71 bash`，然后切换到相应的项目中执行 **php71** 是容器名称,在 docker-compose.yml 中 `container_name: php71` 中定义的
-> 如果觉得麻烦，继续往下看，设置 shell 的 alias
+    > 如果觉得麻烦，继续往下看，设置 shell 的 alias
 
 
 ## 统一设置 **.test** 域名到本地 
