@@ -6,50 +6,77 @@
 
 ## 目录结构说明
 ```
-├── Dockerfile # php镜像的构建脚本
-├── README.MD
-├── config    # 几个服务的配置文件目录
-│   ├── nginx
-│   └── php
-├── data        # 数据持久化目录
-│   ├── composer # 会用到缓存，所以持久化
+.
+├── .env  # 环境变量定义。在这里可以定义需要的 php/nginx/msyql 等版本以及端口号
+├── Dockerfile  # php 镜像的构建脚本。里面主要安装了一些扩展以及前端需要的 nodejs、python
+├── config
+│   ├── nginx # nginx 配置文件夹。新项目的配置文件在这里添加 nginx 配置就可以了
+│   ├── php # 这里有 php.ini。 里面我调整了 session.save_handler = redis 和 session.save_path = "tcp://redis:6379"。 表示用 redis(容器)来存储 session
+│   └── redis.conf # redis 配置文件
+├── data # 持久化数据库的目录
+│   ├── composer
 │   ├── mysql
 │   └── redis
 ├── docker-compose.yml
-├── logs       # 目录只存放了 nginx
+├── logs  # 存放 nginx 日志
 │   └── nginx
-└── resources  # 预先准备的资源。 容器内 pecl/apt 安装下载太慢了，所以预准备
+└── resources # 预先准备的资源
     ├── Python-3.8.0.tgz
+    ├── mcrypt-1.0.3.tgz
+    ├── mongodb-1.6.0.tgz
     ├── node-v12.13.0-linux-x64.tar.xz
     ├── redis-5.1.1.tgz
     ├── sources.list
     ├── swoole-src-4.4.12.zip
     └── xdebug-2.8.0.tgz
-
 ```
-## 运行
+## 使用
+> 将此项目，克隆到你其他开发项目的平级目录
+启动/创建容器环境
 ```
 docker-compose up -d
 ```
-
-## 重建某个容器
-```bash
-docker-compose down
-docker-compose build php71
-```
 ## 切换 php 版本
 - 开启 `docker-compose.yml` 内 **php73** 部分，然后 `docker-compose up -d php73`, `nginx.conf` 内 `fastcgi_pass php73:9000;` 即可
-- 需要配置 `hosts`
 
-## resources
-node/python等，本可以 apt-get 去直接安装，但是考虑到容器内每次要联网下载，所以直接用资源编译安装
+## 配置新开发项目
+1. 将项目放在同级目录
+2. 添加 nginx 配置文件,例如：`config/nginx/conf.d/laravel.conf`
+    ```nginx
+       server_name laravel.test;
+       root        /var/www/项目名称/public或其他入口目录; 
+    ```
+3. 配置宿主机 **hosts**，指定域名 `127.0.0.1 laravel.test`  
+> [可选项]这样用每个项目都得配置，比较麻烦，所以有以下方式快捷配置
+4. 项目中使用 mysql/redis 时，需要配置为 **容器名**。例如在 `laravel/env.php` 中
+```ini
+REDIS_HOST=redis  # 填写redis, 运行时容器会自动解析的。因为 docker ps 查看，得知 redis 的容器名叫做 "redis"
+# REDIS_HOST=127.0.0.1 # 而不是填写 ip
+REDIS_PASSWORD=null
+REDIS_PORT=6379
 
-## 使用
-- 项目配置 **redis**、**mysql** 时，填写 **容器名**，而不是 `127.0.0.1`
-- laravel 项目执行 artisan 命令
-    > php artisan xxx
-- `php71.ini` 配置了 `session.save_path = "tcp://redis:6379"` ,即使用 **redis** 容器来存放 session
+DB_CONNECTION=mysql
+DB_HOST=mysql  # 同理，填写 mysql
+#DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+```
+5. 执行 `php、composer` 等脚本
+需要进入容器内进行 `docker exec -it php71 bash`，然后切换到相应的项目中执行 **php71** 是容器名称,在 docker-compose.yml 中 `container_name: php71` 中定义的
+> 如果觉得麻烦，继续往下看，设置 shell 的 alias
 
+
+## 统一设置 **.test** 域名到本地 
+1.  `brew install dnsmasq`
+2. `/usr/local/etc/dnsmasq.conf` 里面配置 ` address=/.test/127.0.0.1`
+3. Create a dns resolver：
+    ```bash 
+       sudo mkdir -v /etc/resolver
+       sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+    ```
+   
 ## 快捷命令
 - composer
 - npm
@@ -73,6 +100,8 @@ node/python等，本可以 apt-get 去直接安装，但是考虑到容器内每
 - **ddown** 
     > 关闭
 
+> 以下脚本大致意思是：
+> 你在`当前项目下运行`，执行后，会直接帮你在 容器内的 `当前项目` 下执行对应命令
 ```bash
     function composer
         set p (pwd)
@@ -106,13 +135,3 @@ node/python等，本可以 apt-get 去直接安装，但是考虑到容器内每
         docker-compose restart $argv
     end
 ```
-
-
-## 统一设置 **.test** 域名到本地
-1.  `brew install dnsmasq`
-2. `/usr/local/etc/dnsmasq.conf` 里面配置 ` address=/.test/127.0.0.1`
-3. Create a dns resolver：
-    ```bash 
-       sudo mkdir -v /etc/resolver
-       sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
-    ```
