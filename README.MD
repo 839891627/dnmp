@@ -10,16 +10,16 @@
 ├── .env  # 环境变量定义。在这里可以定义需要的 php/nginx/msyql 等版本以及端口号
 ├── Dockerfile  # php 镜像的构建脚本。里面主要安装了一些扩展以及前端需要的 nodejs、python
 ├── config
-│   ├── nginx # nginx 配置文件夹。新项目的配置文件在这里添加 nginx 配置就可以了
-│   ├── php # 这里有 php.ini。 里面我调整了 session.save_handler = redis 和 session.save_path = "tcp://redis:6379"。 表示用 redis(容器)来存储 session
-│   └── redis.conf # redis 配置文件
+│   ├── nginx # nginx 配置文件夹。新项目的配置文件在这里添加 nginx 配置就可以了
+│   ├── php # 这里有 php.ini。 里面我调整了 session.save_handler = redis 和 session.save_path = "tcp://redis:6379"。 表示用 redis(容器)来存储 session
+│   └── redis.conf # redis 配置文件
 ├── data # 持久化数据库的目录
-│   ├── composer
-│   ├── mysql
-│   └── redis
+│   ├── composer
+│   ├── mysql
+│   └── redis
 ├── docker-compose.yml
 ├── logs  # 存放 nginx 日志
-│   └── nginx
+│   └── nginx
 └── resources # 预先准备的资源
     ├── Python-3.8.0.tgz
     ├── mcrypt-1.0.3.tgz
@@ -37,10 +37,12 @@
     ```
     docker-compose up -d
     ```
-## 切换 php 版本
+### 切换 php 版本
+
 开启 `docker-compose.yml` 内 **php73** 部分，然后 `docker-compose up -d php73`, `nginx.conf` 内 `fastcgi_pass php73:9000;` 即可
 
-## 配置新开发项目
+### 配置新开发项目
+
 1. 将项目放在同级目录
 2. 添加 nginx 配置文件,例如：`config/nginx/conf.d/laravel.conf`
     ```nginx
@@ -48,6 +50,7 @@
        root        /var/www/项目名称/public或其他入口目录; 
     ```
 3. 配置宿主机 **hosts**，指定域名 `127.0.0.1 laravel.test`  
+    
     > [可选项]这样用每个项目都得配置，比较麻烦，所以有以下方式快捷配置
 4. 项目中使用 mysql/redis 时，需要配置为 **容器名**。例如在 `laravel/env.php` 中
     ```ini
@@ -66,26 +69,31 @@
     ```
 5. 执行 `php、composer` 等脚本  
 需要进入容器内进行 `docker exec -it php71 bash`，然后切换到相应的项目中执行 **php71** 是容器名称,在 docker-compose.yml 中 `container_name: php71` 中定义的
+   
     > 如果觉得麻烦，继续往下看，设置 shell 的 alias
 
+### 统一设置 **.test** 域名到本地
 
-## 统一设置 **.test** 域名到本地 
 1.  `brew install dnsmasq`
 2. `/usr/local/etc/dnsmasq.conf` 里面配置 ` address=/.test/127.0.0.1`
 3. Create a dns resolver：
     ```bash 
        sudo mkdir -v /etc/resolver
-       sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+       sudo bash -c 'echo "nameserver 172.19.0.5" > /etc/resolver/test'
     ```
-   
+
 ## 快捷命令
+
 - composer
 - npm
 
-# fish shell 中直接运行容器内命令
+### fish shell 中直接运行容器内命令
+
 - **composer** 
+    
     > php71容器
 - **php** 
+    
     > php71容器
 - **dc 容器名称 命令** 
     > 万能脚本
@@ -93,12 +101,16 @@
     > - `dc php73 node -v` 
     > - `dc nginx bash` 进入 nginx 容器 
 - **dup [容器名]** 
+    
     > 启动 [指定] 容器
 - **dr [容器名]** 
+    
     > 重启 [指定] 容器
 - **dps** 
+    
     > 查看进程
 - **ddown** 
+    
     > 关闭
 
 > 以下脚本大致意思是：
@@ -136,3 +148,16 @@
         docker-compose restart $argv
     end
 ```
+
+### Q&A
+
+- 本地项目，通过域名访问不解析问题
+
+  > 目前通过在 **php容器内**，修改 /etc/hosts 解决
+  >
+  > ```bash
+  > docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx # 首先在宿主机中获取 nginx 容器 ip
+  > docker exec -it php bash # 进入php容器
+  > echo '第一步中返回的ip domain.test' >> /etc/hosts 
+  > ```
+
