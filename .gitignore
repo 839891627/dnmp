@@ -9,5 +9,5 @@ logs/
 mysql/
 www/
 redis
-nginx/conf.d
-
+!/config/nginx/conf.d/laravel.conf
+/config/nginx/conf.d/*
