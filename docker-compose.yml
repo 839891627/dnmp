@@ -9,43 +9,38 @@ services:
     restart: always
     working_dir: /var/www
     depends_on:
-      - mysql
+      - nginx
     volumes:
       - ${WEB_ROOT}:/var/www:cached
       - ${COMPOSER}/php71:/root/.composer/
       - ${PHP71_INI}:/usr/local/etc/php/php.ini
     environment:
       TZ: "$TZ"
-      WEB_ENV: "dev" # 信用飞项目使用
+      WEB_ENV: "local" # 信用飞项目使用
     ports: # hexo 需要 4000 端口
       - 4000:4000
 
-#  php73:
-#    build:
-#      context: .
-#      args:
-#        PHP_VERSION: 7.3
-#    container_name: php73
-#    restart: always
-#    working_dir: /var/www
-#    depends_on:
-#      - mysql
-#    volumes:
-#      - ${WEB_ROOT}:/var/www
-#      - ${COMPOSER}/php73:/root/.composer/
-#      - ${PHP73_INI}:/usr/local/etc/php/php.ini
-#    environment:
-#      TZ: "$TZ"
-#    ports:
-#      - 9501:9501
+  php73:
+    build:
+      context: .
+      args:
+        PHP_VERSION: 7.3
+    container_name: php73
+    restart: always
+    working_dir: /var/www
+    depends_on:
+      - mysql
+    volumes:
+      - ${WEB_ROOT}:/var/www
+      - ${COMPOSER}/php73:/root/.composer/
+      - ${PHP73_INI}:/usr/local/etc/php/php.ini
+    environment:
+      TZ: "$TZ"
 
   nginx:
     image: nginx:latest
     container_name: nginx
     restart: always
-    depends_on:
-      - php71
-    #      - php73
     volumes:
       - ${WEB_ROOT}:/var/www:cached # 需要和 php 的目录一致
       - ${NGINX_CONF}:/etc/nginx/conf.d  # nginx 配置

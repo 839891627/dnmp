@@ -38,8 +38,11 @@
     docker-compose up -d
     ```
 ### 切换 php 版本
-
 开启 `docker-compose.yml` 内 **php73** 部分，然后 `docker-compose up -d php73`, `nginx.conf` 内 `fastcgi_pass php73:9000;` 即可
+
+#### 安装扩展
+- `docker-php-ext-install -h` 查看可以安装的扩展
+- `docker-php-ext-enable -h` 启用扩展
 
 ### 配置新开发项目
 
@@ -50,7 +53,7 @@
        root        /var/www/项目名称/public或其他入口目录; 
     ```
 3. 配置宿主机 **hosts**，指定域名 `127.0.0.1 laravel.test`  
-    
+   
     > [可选项]这样用每个项目都得配置，比较麻烦，所以有以下方式快捷配置
 4. 项目中使用 mysql/redis 时，需要配置为 **容器名**。例如在 `laravel/env.php` 中
     ```ini
@@ -161,3 +164,6 @@
   > echo '第一步中返回的ip domain.test' >> /etc/hosts 
   > ```
 
+- 如果固定容器IP
+
+  https://github.com/yeszao/dnmp/issues/91
