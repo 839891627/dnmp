@@ -90,6 +90,7 @@
 - composer
 - npm
 ### iterm shell 中直接运行容器内命令
+`vi ~/.zshrc`
 ```bash
 fun php(){
     p=`pwd`
