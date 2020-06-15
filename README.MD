@@ -82,13 +82,49 @@
 3. Create a dns resolver：
     ```bash 
        sudo mkdir -v /etc/resolver
-       sudo bash -c 'echo "nameserver 172.19.0.5" > /etc/resolver/test'
+       sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
     ```
 
 ## 快捷命令
 
 - composer
 - npm
+### iterm shell 中直接运行容器内命令
+```bash
+fun php(){
+    p=`pwd`
+    # 我的宿主机是目录名是： docker
+    i=$p[(I)docker] 
+    if [ $i -gt 0 ]; then
+        b=${p:t}
+        docker exec -it -w /var/www/$b php71 php "$@"
+    else
+        docker exec -it  php71 php "$@"
+    fi
+}
+fun php73(){
+    p=`pwd`
+    i=$p[(I)docker]
+    if [ $i -gt 0 ]; then
+        b=${p:t}
+        docker exec -it -w /var/www/$b php73 php "$@"
+    else
+        docker exec -it  php73 php "$@"
+    fi
+}
+alias dup='docker-compose up'
+#alias php='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 php'
+alias composer='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 composer'
+alias node='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 node'
+alias npm='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 npm'
+#alias php73='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php73 php'
+alias dup='docker-compose up'
+alias dr='docker-compose r'
+alias dps='docker-compose ps'
+alias ddown='docker-compose down'
+alias dr='docker-compose restart'
+alias dc='docker-compose exec'
+```
 
 ### fish shell 中直接运行容器内命令
 
