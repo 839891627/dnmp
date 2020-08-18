@@ -9,6 +9,7 @@ services:
     restart: always
     working_dir: /var/www
     volumes:
+      - ~/.ssh:/root/.ssh/
       - ${WEB_ROOT}:/var/www:cached
       - ${COMPOSER}/php71:/root/.composer/
       - ${PHP71_INI}:/usr/local/etc/php/php.ini
@@ -18,22 +19,22 @@ services:
     ports: # hexo 需要 4000 端口
       - 4000:4000
 
-  php73:
-    build:
-      context: .
-      args:
-        PHP_VERSION: 7.3
-    container_name: php73
-    restart: always
-    working_dir: /var/www
-    volumes:
-      - ${WEB_ROOT}:/var/www
-      - ${COMPOSER}/php73:/root/.composer/
-      - ${PHP73_INI}:/usr/local/etc/php/php.ini
-    environment:
-      TZ: "$TZ"
-    ports:
-    - 9501:9501
+        #php73:
+        #  build:
+        #    context: .
+        #    args:
+        #      PHP_VERSION: 7.3
+        #  container_name: php73
+        #  restart: always
+        #  working_dir: /var/www
+        #  volumes:
+        #    - ${WEB_ROOT}:/var/www
+        #    - ${COMPOSER}/php73:/root/.composer/
+        #    - ${PHP73_INI}:/usr/local/etc/php/php.ini
+        #  environment:
+        #    TZ: "$TZ"
+        #  ports:
+        #  - 9501:9501
 
   nginx:
     image: nginx:latest

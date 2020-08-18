@@ -26,11 +26,11 @@ RUN mkdir -p /usr/src/php/ext \
     && docker-php-ext-install redis
 
 # 安装 python3
-RUN cd /tmp/Python-3.8.0 && ./configure && make && make install && rm -rf /tmp/Python-3.8.0 Python-3.8.0.tgz
+#RUN cd /tmp/Python-3.8.0 && ./configure && make && make install && rm -rf /tmp/Python-3.8.0 Python-3.8.0.tgz
 
 # 安装 nodejs
-RUN ln -s /tmp/node-v12.13.0-linux-x64/bin/node /usr/bin/node \
-    && ln -s /tmp/node-v12.13.0-linux-x64/bin/npm /usr/bin/npm
+#RUN ln -s /tmp/node-v12.13.0-linux-x64/bin/node /usr/bin/node \
+#    && ln -s /tmp/node-v12.13.0-linux-x64/bin/npm /usr/bin/npm
 
 # 安装 swoole
 RUN cd /tmp && unzip swoole-src-4.4.12.zip \
