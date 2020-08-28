@@ -18,6 +18,8 @@ services:
       WEB_ENV: "local" # 信用飞项目使用
     ports: # hexo 需要 4000 端口
       - 4000:4000
+    networks:
+      static-network:
 
         #php73:
         #  build:
@@ -37,7 +39,7 @@ services:
         #  - 9501:9501
 
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx
     restart: always
     volumes:
@@ -48,6 +50,9 @@ services:
       - ${NGINX_PORT}:80
     environment:
       TZ: "$TZ"
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
 
   mysql:
     image: mysql:${MYSQL_VERSION}
@@ -62,6 +67,8 @@ services:
       TZ: "$TZ"
     ports:
       - ${MYSQL_PORT}:3306
+    networks:
+      static-network:
 
   redis:
     image: redis:${REDIS_VERSION}
@@ -73,3 +80,11 @@ services:
     ports:
       - ${REDIS_PORT}:6379
     command: [redis-server, "/usr/local/etc/redis/redis.conf"]
+    networks:
+      static-network:
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

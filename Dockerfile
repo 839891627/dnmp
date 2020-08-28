@@ -11,13 +11,13 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && apt-get install -y --no-install-recommends apt-utils \
     && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev unzip\
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/  --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install pdo_mysql zip gd opcache bcmath pcntl
+    && docker-php-ext-install pdo_mysql zip gd opcache bcmath pcntl sockets
 
 WORKDIR /tmp
 
 ADD ./resources/redis-5.1.1.tgz .
-ADD ./resources/Python-3.8.0.tgz .
-ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
+#ADD ./resources/Python-3.8.0.tgz .
+#ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
 COPY ./resources/swoole-src-4.4.12.zip .
 
 # 安装 redis 扩展
