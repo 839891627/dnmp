@@ -21,22 +21,24 @@ services:
     networks:
       static-network:
 
-        #php73:
-        #  build:
-        #    context: .
-        #    args:
-        #      PHP_VERSION: 7.3
-        #  container_name: php73
-        #  restart: always
-        #  working_dir: /var/www
-        #  volumes:
-        #    - ${WEB_ROOT}:/var/www
-        #    - ${COMPOSER}/php73:/root/.composer/
-        #    - ${PHP73_INI}:/usr/local/etc/php/php.ini
-        #  environment:
-        #    TZ: "$TZ"
-        #  ports:
-        #  - 9501:9501
+#  php73:
+#    build:
+#      context: .
+#      args:
+#        PHP_VERSION: 7.3
+#    container_name: php73
+#    restart: always
+#    working_dir: /var/www
+#    volumes:
+#      - ${WEB_ROOT}:/var/www
+#      - ${COMPOSER}/php73:/root/.composer/
+#      - ${PHP73_INI}:/usr/local/etc/php/php.ini
+#    environment:
+#      TZ: "$TZ"
+#    ports:
+#    - 9501:9501
+#    networks:
+#      static-network:
 
   nginx:
     image: nginx:alpine

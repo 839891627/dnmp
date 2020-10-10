@@ -1,8 +1,4 @@
-deb http://mirrors.163.com/debian/ buster main non-free contrib
-deb http://mirrors.163.com/debian/ buster-updates main non-free contrib
-deb http://mirrors.163.com/debian/ buster-backports main non-free contrib
-deb-src http://mirrors.163.com/debian/ buster main non-free contrib
-deb-src http://mirrors.163.com/debian/ buster-updates main non-free contrib
-deb-src http://mirrors.163.com/debian/ buster-backports main non-free contrib
-deb http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
-deb-src http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free
+deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free
+deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free
