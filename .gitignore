@@ -11,3 +11,5 @@ www/
 redis
 !/config/nginx/conf.d/laravel.conf
 /config/nginx/conf.d/*
+/config/nginx/.DS_Store
+/.DS_Store

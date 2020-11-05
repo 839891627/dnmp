@@ -1,18 +1,18 @@
 version: "3"
 services:
-  php71:
+  php72:
     build:
       context: .
       args:
-        PHP_VERSION: 7.1
-    container_name: php71
+        PHP_VERSION: 7.2
+    container_name: php72
     restart: always
     working_dir: /var/www
     volumes:
       - ~/.ssh:/root/.ssh/
       - ${WEB_ROOT}:/var/www:cached
-      - ${COMPOSER}/php71:/root/.composer/
-      - ${PHP71_INI}:/usr/local/etc/php/php.ini
+      - ${COMPOSER}/php72:/root/.composer/
+      - ${PHP72_INI}:/usr/local/etc/php/php.ini
     environment:
       TZ: "$TZ"
       WEB_ENV: "local" # 信用飞项目使用
