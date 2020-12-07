@@ -39,10 +39,10 @@ RUN cd /tmp && unzip swoole-src-4.4.12.zip \
 
 ADD ./resources/mcrypt-1.0.3.tgz .
 ADD ./resources/mongodb-1.6.0.tgz .
-ADD ./resources/xdebug-2.8.0.tgz .
+ADD ./resources/xdebug-3.0.1.tgz .
 
 RUN cd /tmp/mcrypt-1.0.3 && phpize && ./configure && make && make install && rm -rf /tmp/mcrypt-1.0.3
 RUN cd /tmp/mongodb-1.6.0 && phpize && ./configure && make && make install && rm -rf /tmp/mongodb-1.6.0
-RUN cd /tmp/xdebug-2.8.0 && phpize && ./configure && make && make install && rm -rf /tmp/xdebug-2.8.0
+RUN cd /tmp/xdebug-3.0.1 && phpize && ./configure && make && make install && rm -rf /tmp/xdebug-3.0.1
 
 CMD php-fpm
