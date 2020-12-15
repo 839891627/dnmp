@@ -18,27 +18,32 @@ services:
       WEB_ENV: "local" # 信用飞项目使用
     ports: # hexo 需要 4000 端口
       - 4000:4000
+    extra_hosts:
+      - fund-api.test:172.20.128.2
+      - xyf-pay-system.test:172.20.128.2
+      - shoufuyou-pay-gateway.test:172.20.128.2
+      - xyf-middleground-system.test:172.20.128.2
     networks:
       static-network:
 
-#  php73:
-#    build:
-#      context: .
-#      args:
-#        PHP_VERSION: 7.3
-#    container_name: php73
-#    restart: always
-#    working_dir: /var/www
-#    volumes:
-#      - ${WEB_ROOT}:/var/www
-#      - ${COMPOSER}/php73:/root/.composer/
-#      - ${PHP73_INI}:/usr/local/etc/php/php.ini
-#    environment:
-#      TZ: "$TZ"
-#    ports:
-#    - 9501:9501
-#    networks:
-#      static-network:
+  #  php73:
+  #    build:
+  #      context: .
+  #      args:
+  #        PHP_VERSION: 7.3
+  #    container_name: php73
+  #    restart: always
+  #    working_dir: /var/www
+  #    volumes:
+  #      - ${WEB_ROOT}:/var/www
+  #      - ${COMPOSER}/php73:/root/.composer/
+  #      - ${PHP73_INI}:/usr/local/etc/php/php.ini
+  #    environment:
+  #      TZ: "$TZ"
+  #    ports:
+  #    - 9501:9501
+  #    networks:
+  #      static-network:
 
   nginx:
     image: nginx:alpine
@@ -81,7 +86,7 @@ services:
       - ${REDIS_CONF}:/usr/local/etc/redis/redis.conf
     ports:
       - ${REDIS_PORT}:6379
-    command: [redis-server, "/usr/local/etc/redis/redis.conf"]
+    command: [ redis-server, "/usr/local/etc/redis/redis.conf" ]
     networks:
       static-network:
 
