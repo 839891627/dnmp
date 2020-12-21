@@ -1,9 +1,10 @@
 ARG PHP_VERSION
 FROM php:${PHP_VERSION}-fpm
 
-# 替换源来加速
+# 替换成 清华大学源加速。真快
 COPY ./resources/sources.list /etc/apt/
 
+# 安装 composer 以及一些 php 扩展
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
@@ -21,6 +22,7 @@ RUN mkdir -p /usr/src/php/ext \
     && mv /tmp/redis-5.1.1 /usr/src/php/ext/redis \
     && docker-php-ext-install redis
 
+# 以下注释按需打开（某些项目需要 npm 啥的）
 # 安装 python3
 #ADD ./resources/Python-3.8.0.tgz .
 #RUN cd /tmp/Python-3.8.0 && ./configure && make && make install && rm -rf /tmp/Python-3.8.0 Python-3.8.0.tgz
