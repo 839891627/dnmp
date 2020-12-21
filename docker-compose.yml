@@ -20,6 +20,7 @@ services:
       - 4000:4000
     extra_hosts:
       - fund-api.test:172.20.128.2
+      - fund-system.test:172.20.128.2
       - xyf-pay-system.test:172.20.128.2
       - shoufuyou-pay-gateway.test:172.20.128.2
       - xyf-middleground-system.test:172.20.128.2

@@ -71,7 +71,7 @@
     DB_PASSWORD=secret
     ```
 5. 执行 `php、composer` 等脚本  
-需要进入容器内进行 `docker exec -it php71 bash`，然后切换到相应的项目中执行 **php71** 是容器名称,在 docker-compose.yml 中 `container_name: php71` 中定义的
+需要进入容器内进行 `docker exec -it php72 bash`，然后切换到相应的项目中执行 **php72** 是容器名称,在 docker-compose.yml 中 `container_name: php72` 中定义的
    
     > 如果觉得麻烦，继续往下看，设置 shell 的 alias
 
@@ -84,7 +84,16 @@
        sudo mkdir -v /etc/resolver
        sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
     ```
+### xdeug 使用
+> # 这里同时开启了 profile，如果不需要，直接改成 debug  即可
+> xdebug.mode=debug,profile  
+> xdebug.output_dir=/var/www/xdebug
+> xdebug.start_with_request=trigger
+> xdebug.trigger_value=""
+> ;; mac 下使用此取代宿主机的ip地址
+> xdebug.client_host=host.docker.internal
 
+GET/POST/COOKIE 添加参数 'XDEBUG_TRIGGER=任意值'
 ## 快捷命令
 
 - composer
@@ -98,9 +107,9 @@ fun php(){
     i=$p[(I)docker] 
     if [ $i -gt 0 ]; then
         b=${p:t}
-        docker exec -it -w /var/www/$b php71 php "$@"
+        docker exec -it -w /var/www/$b php72 php "$@"
     else
-        docker exec -it  php71 php "$@"
+        docker exec -it  php72 php "$@"
     fi
 }
 fun php73(){
@@ -114,10 +123,10 @@ fun php73(){
     fi
 }
 alias dup='docker-compose up'
-#alias php='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 php'
-alias composer='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 composer'
-alias node='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 node'
-alias npm='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php71 npm'
+#alias php='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php72 php'
+alias composer='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php72 composer'
+alias node='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php72 node'
+alias npm='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php72 npm'
 #alias php73='a=`pwd`;b=${a:t};docker exec -it -w /var/www/$b php73 php'
 alias dup='docker-compose up'
 alias dr='docker-compose r'
@@ -131,13 +140,13 @@ alias dc='docker-compose exec'
 
 - **composer** 
     
-    > php71容器
+    > php72容器
 - **php** 
     
-    > php71容器
+    > php72容器
 - **dc 容器名称 命令** 
     > 万能脚本
-    > - `dc php71 node -v` 
+    > - `dc php72 node -v` 
     > - `dc php73 node -v` 
     > - `dc nginx bash` 进入 nginx 容器 
 - **dup [容器名]** 
@@ -161,13 +170,13 @@ alias dc='docker-compose exec'
         # 这个35，是我自己宿主机的地址，即 /Users/caojinliang/Develop/Docker/ 共35个字符，换成你自己的
         set pp (string sub $p -s 35) 
         set ppp /var/www/$pp
-        docker exec -it -w $ppp php71 composer $argv
+        docker exec -it -w $ppp php72 composer $argv
     end
     function php
         set p (pwd)
         set pp (string sub $p -s 35)
         set ppp /var/www/$pp
-        docker exec -it -w $ppp php71 php $argv
+        docker exec -it -w $ppp php72 php $argv
     end
     function dc
         set p (pwd)
