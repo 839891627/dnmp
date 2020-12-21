@@ -47,8 +47,9 @@ docker 是啥、为啥使用它，咱们这里不加赘述。这里和大家分�
 > 使用前强烈建议先将 docker-compose.yml、Dockerfile 熟悉一遍，很少的内容
  
 1. 将此项目，克隆到你其他开发项目的平级目录
-├── laravel # 例如有个 laravel 项目在这里
-├── dnmp # 那么，此项目你需要 clone 都这里
+
+    ├── laravel # 例如有个 laravel 项目在这里  
+    ├── dnmp # 那么，此项目你需要 clone 都这里
 
 2. 启动/创建容器环境
 然后切换到 dnmp 目录下，执行
