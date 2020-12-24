@@ -107,7 +107,7 @@ docker 是啥、为啥使用它，咱们这里不加赘述。这里和大家分�
    
 #### xdeug 使用
     > 安装的是 3.x 版本。端口号默认是 **9003**  
-    > phpstorm 配置可以参照我这里视频：https://www.bilibili.com/video/BV1J64y1u7dw#reply2806426126  (视频里端口号是 9001，现在项目应该是  9003)  
+    > phpstorm 配置可以参照我这里视频：https://www.bilibili.com/video/BV1nV411b7T3?pop_share=1
     > `config/php/php72.ini`  
     > 配置中我已经配置好了，开启了 debug 和 profile(如果不需要，直接删除就行了)
 GET/POST/COOKIE 添加参数 'XDEBUG_TRIGGER=任意值'
