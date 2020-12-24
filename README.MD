@@ -49,7 +49,7 @@ docker 是啥、为啥使用它，咱们这里不加赘述。这里和大家分�
 1. 将此项目，克隆到你其他开发项目的平级目录
 
     ├── laravel # 例如有个 laravel 项目在这里  
-    ├── dnmp # 那么，此项目你需要 clone 都这里
+    ├── dnmp # 那么，此项目你需要 clone 到这里
 
 2. 启动/创建容器环境
 然后切换到 dnmp 目录下，执行
@@ -57,8 +57,8 @@ docker 是啥、为啥使用它，咱们这里不加赘述。这里和大家分�
     docker-compose up -d
     # 如果使用了 我下面给的 zshrc 的 alias，则是 dup -d 即可
     ```
-3. 添加响应的 nginx 配置文件。参考 `config/nginx/conf.d/laravel.conf`
-4. 如果有调整 nginx 配置，在 `dnmp` 目录下执行  `docker-compose restart nginx`（使用了alias，则执行 `dr nginx`）
+3. 添加相应的 nginx 配置文件。参考 `config/nginx/conf.d/laravel.conf`
+4. 如果有调整 nginx 配置，在 `dnmp` 目录下执行（重启 nginx 容器）  `docker-compose restart nginx`（使用了alias，则执行 `dr nginx`）
 5. 可以项目访问了
    > 1. 配置宿主机 **hosts**，指定域名 `127.0.0.1 laravel.test`
    > 2. 项目中使用 mysql/redis 时，需要配置为 **容器名**。例如在 `laravel/env.php` 中
@@ -75,7 +75,7 @@ docker 是啥、为啥使用它，咱们这里不加赘述。这里和大家分�
    > DB_USERNAME=homestead
    > DB_PASSWORD=secret
    > ```
-   > 3. [可选项]这样用每个项目都得配置，比较麻烦，通过 **dnsmasq** 可以达到一劳永逸的目录。可以参照下面的附录
+   > 3. [可选项]这样用每个项目都得配置 host，比较麻烦，通过 **dnsmasq** 可以达到一劳永逸的目录。可以参照下面的附录
 
 
 ### 四、其他功能
