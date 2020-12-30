@@ -124,7 +124,7 @@ GET/POST/COOKIE 添加参数 'XDEBUG_TRIGGER=任意值'
 **1. 方案二**
 见 docker-compose.yml 
 
-    ```apacheconf
+    ```
         extra_hosts:
           - laravel.test:172.20.128.2 # 此 ip 是nginx容器ip，已经被设置为固定。这样不会因为每次重启，ip 变化的问题
     ```
