@@ -87,6 +87,16 @@ services:
     networks:
       static-network:
 
+  sftp:
+    image: atmoz/sftp
+    container_name: sftp
+    restart: always
+    volumes:
+      - ${SFTP_DIR}:/home/foo/
+    ports:
+      - ${SFTP_PORT}:22
+    command: ${SFTP_USER}:${SFTP_PASSWORD}:1001
+
 networks:
   static-network:
     ipam:
