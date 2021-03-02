@@ -15,11 +15,15 @@ services:
       - ${PHP72_INI}:/usr/local/etc/php/php.ini
     environment:
       TZ: "$TZ"
-      WEB_ENV: "local" # 我有个项目需要的环境变量叫做 ‘WEB_ENV’。这个设置后，在 fast-cgi 中设置了
+      WEB_ENV: "local" # 信用飞项目使用
     ports: # hexo 需要 4000 端口
       - 4000:4000
     extra_hosts:
-      - laravel.test:172.20.128.2
+      - fund-api.test:172.20.128.2
+      - fund-system.test:172.20.128.2
+      - xyf-pay-system.test:172.20.128.2
+      - shoufuyou-pay-gateway.test:172.20.128.2
+      - xyf-middleground-system.test:172.20.128.2
     networks:
       static-network:
 
@@ -96,6 +100,18 @@ services:
     ports:
       - ${SFTP_PORT}:22
     command: ${SFTP_USER}:${SFTP_PASSWORD}:1001
+    networks:
+      static-network:
+
+  rmq:
+    image: rabbitmq:3-management
+    container_name: rmq
+    restart: always
+    ports:
+      - ${RMQ_WEB_PORT}:15672
+      - ${RMQ_PORT}:5672
+    networks:
+      static-network:
 
 networks:
   static-network:
