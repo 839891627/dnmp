@@ -24,13 +24,13 @@ RUN mkdir -p /usr/src/php/ext \
 
 # 以下注释按需打开（某些项目需要 npm 啥的）
 # 安装 python3
-#ADD ./resources/Python-3.8.0.tgz .
-#RUN cd /tmp/Python-3.8.0 && ./configure && make && make install && rm -rf /tmp/Python-3.8.0 Python-3.8.0.tgz
+ADD ./resources/Python-2.7.18.tar.xz .
+RUN cd /tmp/Python-2.7.18 && ./configure && make && make install && rm -rf /tmp/Python-2.7.18 Python-2.7.18.tar.xz
 
 # 安装 nodejs
-#ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
-#RUN ln -s /tmp/node-v12.13.0-linux-x64/bin/node /usr/bin/node \
-#    && ln -s /tmp/node-v12.13.0-linux-x64/bin/npm /usr/bin/npm
+ADD ./resources/node-v14.18.1-linux-x64.tar.xz .
+RUN ln -s /tmp/node-v14.18.1-linux-x64/bin/node /usr/bin/node \
+    && ln -s /tmp/node-v14.18.1-linux-x64/bin/npm /usr/bin/npm
 
 # 安装 swoole
 #COPY ./resources/swoole-src-4.4.12.zip .
