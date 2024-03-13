@@ -5,6 +5,7 @@ services:
       context: .
       args:
         PHP_VERSION: 7.2
+    platform: linux/amd64
     container_name: php72
     restart: always
     working_dir: /var/www
@@ -19,11 +20,7 @@ services:
     ports: # hexo 需要 4000 端口
       - 4000:4000
     extra_hosts:
-      - fund-api.test:172.20.128.2
-      - fund-system.test:172.20.128.2
-      - xyf-pay-system.test:172.20.128.2
-      - shoufuyou-pay-gateway.test:172.20.128.2
-      - xyf-middleground-system.test:172.20.128.2
+      - a.test:172.20.128.2
     networks:
       static-network:
 
@@ -48,6 +45,7 @@ services:
 
   nginx:
     image: nginx:alpine
+    platform: linux/amd64/v8
     container_name: nginx
     restart: always
     volumes:
@@ -64,6 +62,7 @@ services:
 
   mysql:
     image: mysql:${MYSQL_VERSION}
+    platform: linux/amd64/v8
     container_name: mysql
     volumes:
       - ${MYSQL_DATA}:/var/lib/mysql
@@ -80,6 +79,7 @@ services:
 
   redis:
     image: redis:${REDIS_VERSION}
+    platform: linux/amd64/v8
     container_name: redis
     restart: always
     volumes:
@@ -105,6 +105,7 @@ services:
 
   rmq:
     image: rabbitmq:3-management
+    platform: linux/amd64/v8
     container_name: rmq
     restart: always
     ports:

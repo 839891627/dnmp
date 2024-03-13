@@ -1,8 +1,8 @@
 ARG PHP_VERSION
 FROM php:${PHP_VERSION}-fpm
 
-# 替换成 清华大学源加速。真快
-COPY ./resources/sources.list /etc/apt/
+# 替换成 清华大学源加速。真快。有问题，暂时不用了
+#COPY ./resources/sources.list /etc/apt/
 
 # 安装 composer 以及一些 php 扩展
 RUN curl -sS https://getcomposer.org/installer | php \
