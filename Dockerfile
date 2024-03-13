@@ -10,7 +10,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends apt-utils \
-    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev unzip\
+    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev libjpeg62-turbo-dev unzip\
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/  --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install pdo_mysql zip gd opcache bcmath pcntl sockets
 
