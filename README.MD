@@ -1,127 +1,351 @@
 ## 一、背景
-docker 是啥、为啥使用它，咱们这里不加赘述。这里和大家分享下我搭建的 php 开发环境。  
- 此仓库尽量遵循 **“精简原则”** 。尽量最小定制化，将定制工作交给使用者。 **授人以鱼不如授人以渔**，我希望通过简单的例子，给大家自行发挥的空间，毕竟每个人的需求有所差别。做大而全的东西，反而**臃肿看不懂**
+
+这是一个基于 Docker 的 PHP 开发环境（DNMP: Docker + Nginx + MySQL + PHP），遵循 **"精简原则"**，尽量最小定制化，将定制工作交给使用者。通过简单的配置，提供灵活的开发环境。
 
 ## 二、特点
-- 简单
-- **辅助脚本**
-- 优化：脚本加速啥的
-- 条理：构建脚本的分组等
+
+- ✅ **简单易用**：开箱即用，配置清晰
+- ✅ **现代化**：兼容最新 Docker Compose 格式
+- ✅ **灵活配置**：通过环境变量轻松调整版本和端口
+- ✅ **性能优化**：使用缓存挂载，提升开发体验
+- ✅ **多版本支持**：支持 PHP 7.2+、MySQL 5.7/8.0、Redis 等
 
 ## 三、功能说明
+
 ### 1. 目录结构说明
+
 ```
 .
-├── .env  # 环境变量定义。在这里可以定义需要的 php/nginx/msyql 等版本以及端口号
-├── Dockerfile  # php 镜像的构建脚本。里面主要安装了一些扩展以及前端需要的 nodejs、python
-├── config
-│   ├── nginx # nginx 配置文件夹。新项目的配置文件在这里添加 nginx 配置就可以了
-│   ├── php # 这里有 php.ini。 里面我调整了 session.save_handler = redis 和 session.save_path = "tcp://redis:6379"。 表示用 redis(容器)来存储 session
-│   └── redis.conf # redis 配置文件
-├── data # 持久化数据库的目录
-│   ├── composer
-│   ├── mysql
-│   └── redis
-├── docker-compose.yml
-├── logs  # 存放 nginx 日志
-│   └── nginx
-└── resources # 预先准备的资源。这些扩展其实可以进入容器后安装，但是在线安装网络太慢了，所以干脆自行编译安装
-    ├── Python-3.8.0.tgz
-    ├── mcrypt-1.0.3.tgz
-    ├── mongodb-1.6.0.tgz
-    ├── node-v12.13.0-linux-x64.tar.xz
+├── .env                    # 环境变量配置文件（需要从 env.example 复制）
+├── env.example             # 环境变量配置示例文件
+├── Dockerfile              # PHP 镜像构建脚本
+├── docker-compose.yml      # Docker Compose 配置文件
+├── config/
+│   ├── nginx/              # Nginx 配置目录
+│   │   └── conf.d/         # 站点配置文件（在此添加新项目配置）
+│   ├── php/                # PHP 配置文件
+│   │   ├── php72.ini       # PHP 7.2 配置
+│   │   └── php73.ini       # PHP 7.3 配置
+│   └── redis.conf         # Redis 配置文件
+├── data/                   # 数据持久化目录
+│   ├── composer/           # Composer 缓存
+│   ├── mysql/              # MySQL 数据
+│   └── redis/              # Redis 数据
+├── logs/                   # 日志目录
+│   └── nginx/              # Nginx 日志
+└── resources/              # PHP 扩展源码包
     ├── redis-5.1.1.tgz
-    ├── sources.list
-    ├── swoole-src-4.4.12.zip
-    └── xdebug-2.8.0.tgz
+    ├── mongodb-1.6.0.tgz
+    ├── xdebug-3.0.1.tgz
+    └── ...
 ```
+
 ### 2. 集成的服务
-- mysql
-- php7.2/7.3
-- nginx
-- redis
 
-## 三、使用
-> 使用前强烈建议先将 docker-compose.yml、Dockerfile 两个文件熟悉一遍，很少的内容
- 
-1. 将此项目，克隆到你其他开发项目的平级目录
+- **PHP 7.2+** (FPM) - 支持多版本
+- **Nginx** (Alpine) - Web 服务器
+- **MySQL 8.0** - 数据库
+- **Redis 7** - 缓存/会话存储
+- **RabbitMQ** - 消息队列（可选）
+- **SFTP** - 文件传输服务（可选）
 
-    ├── laravel # 例如有个 laravel 项目在这里  
-    ├── dnmp # 那么，此项目你需要 clone 到这里
+## 四、快速开始
 
-2. 启动/创建容器环境
-然后切换到 dnmp 目录下，执行
-    ```
-    docker-compose up -d
-    # 如果使用了 我下面给的 zshrc 的 alias，则是 dup -d 即可
-    ```
-3. 添加相应的 nginx 配置文件。参考 `config/nginx/conf.d/laravel.conf`
-4. 如果有调整 nginx 配置，在 `dnmp` 目录下执行（重启 nginx 容器）  `docker-compose restart nginx`（使用了alias，则执行 `dr nginx`）
-5. 可以项目访问了
-   > 1. 配置宿主机 **hosts**，指定域名 `127.0.0.1 laravel.test`
-   > 2. 项目中使用 mysql/redis 时，需要配置为 **容器名**。例如在 `laravel/env.php` 中
-   > ```ini
-   > REDIS_HOST=redis  # 填写redis, 运行时容器会自动解析的。因为 docker ps 查看，得知 redis 的容器名叫做 "redis"
-   > # REDIS_HOST=127.0.0.1 # 而不是填写 ip
-   > REDIS_PASSWORD=null
-   > REDIS_PORT=6379
-   > DB_CONNECTION=mysql
-   > DB_HOST=mysql  # 同理，填写 mysql
-   > #DB_HOST=127.0.0.1
-   > DB_PORT=3306
-   > DB_DATABASE=homestead
-   > DB_USERNAME=homestead
-   > DB_PASSWORD=secret
-   > ```
-   > 3. [可选项]这样用每个项目都得配置 host，比较麻烦，通过 **dnsmasq** 可以达到一劳永逸的目的。可以参照下面的附录
+### 1. 环境准备
 
+- Docker Desktop 或 Docker Engine 20.10+
+- Docker Compose 2.0+
 
-### 四、其他功能
-1. 切换 php 版本
-开启 `docker-compose.yml` 内 **php73** 部分，然后 `docker-compose up -d php73`, `nginx.conf` 内 `fastcgi_pass php73:9000;` 即可
+### 2. 配置环境变量
 
-2. 安装扩展
-- `docker-php-ext-install -h` 查看可以安装的扩展
-- `docker-php-ext-enable -h` 启用扩展
-    > 如果需要的扩展没有的话，则自行通过 源码包安装。这里不做说明了
-
-3. **执行 `php、composer` 等脚本**
-    需要进入容器内进行 `docker exec -it php72 bash`，然后切换到相应的项目中执行
-    > **php72** 是容器名称,在 docker-compose.yml 中 `container_name: php72` 中定义的  
-     使用 alias 的话，则直接可以在宿主机项目下运行命令，无需进入容器
-
-### 五、附录
-#### 辅助命令
-请参考 `.zshrc`、`.fish` 配置。复制到你对应的配置中
-#### 统一设置 **.test** 域名到本地
-    > mac 下。linux 请自行尝试
-1.  `brew install dnsmasq`
-2. `/usr/local/etc/dnsmasq.conf` 里面配置 ` address=/.test/127.0.0.1`
-3. Create a dns resolver：
-    ```bash 
-       sudo mkdir -v /etc/resolver
-       sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
-    ```
-   
-#### xdeug 使用
-    > 安装的是 3.x 版本。端口号默认是 **9003**  
-    > phpstorm 配置可以参照我这里视频：https://www.bilibili.com/video/BV1nV411b7T3?pop_share=1
-    > `config/php/php72.ini`  
-    > 配置中我已经配置好了，开启了 debug 和 profile(如果不需要，直接删除就行了)
-GET/POST/COOKIE 添加参数 'XDEBUG_TRIGGER=任意值'
-
-#### 关于容器内 A 项目 curl 访问 B 项目不同的解决
-**1. 方案一**
-目前通过在 **php容器内**，修改 /etc/hosts 解决
 ```bash
-docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx # 首先在宿主机中获取 nginx 容器 ip
-docker exec -it php bash # 进入php容器
-echo '第一步中返回的ip domain.test' >> /etc/hosts 
+# 复制环境变量示例文件
+cp env.example .env
+
+# 编辑 .env 文件，根据实际情况修改配置
+# 主要配置项：
+# - WEB_ROOT: 项目根目录路径
+# - PHP_VERSION: PHP 版本
+# - MYSQL_ROOT_PASSWORD: MySQL root 密码
+# - 各服务端口配置
 ```
-**2. 方案二**
-见 docker-compose.yml 
+
+### 3. 项目结构建议
+
+建议将 DNMP 项目放在与其他开发项目的平级目录：
+
+```
+projects/
+├── laravel/          # Laravel 项目
+├── symfony/          # Symfony 项目
+└── dnmp/             # 本环境（DNMP）
+```
+
+### 4. 启动服务
+
+```bash
+# 进入 dnmp 目录
+cd dnmp
+
+# 启动所有服务
+docker compose up -d
+
+# 查看服务状态
+docker compose ps
+
+# 查看日志
+docker compose logs -f
+```
+
+### 5. 配置 Nginx
+
+在 `config/nginx/conf.d/` 目录下添加站点配置文件，参考 `larave.conf` 示例。
+
+### 6. 重启服务
+
+```bash
+# 重启所有服务
+docker compose restart
+
+# 重启单个服务（如 nginx）
+docker compose restart nginx
+
+# 重新构建 PHP 镜像
+docker compose build php72
+```
+
+### 7. 项目配置
+
+#### 配置 Hosts（可选）
+
+在宿主机 `/etc/hosts` 文件中添加：
+
+```
+127.0.0.1 laravel.test
+127.0.0.1 api.test
+```
+
+或者使用 dnsmasq（见附录）。
+
+#### 项目数据库配置
+
+在项目配置文件中使用容器名称作为主机名：
+
+```ini
+# Laravel .env 示例
+DB_CONNECTION=mysql
+DB_HOST=mysql          # 使用容器名，不是 127.0.0.1
+DB_PORT=3306
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+
+REDIS_HOST=redis        # 使用容器名
+REDIS_PORT=6379
+REDIS_PASSWORD=null
+```
+
+
+## 五、常用操作
+
+### 1. 切换 PHP 版本
+
+在 `docker-compose.yml` 中取消注释 `php73` 服务，然后：
+
+```bash
+# 启动 PHP 7.3 服务
+docker compose up -d php73
+
+# 在 Nginx 配置中修改 fastcgi_pass
+# fastcgi_pass php73:9000;
+```
+
+### 2. 进入容器执行命令
+
+```bash
+# 进入 PHP 容器
+docker compose exec php72 bash
+
+# 在容器内执行 PHP 命令
+docker compose exec php72 php -v
+docker compose exec php72 composer install
+
+# 在容器内执行 Composer
+docker compose exec php72 composer require package/name
+```
+
+### 3. 安装 PHP 扩展
+
+扩展已预装在 Dockerfile 中，如需添加新扩展：
+
+1. 将扩展源码包放入 `resources/` 目录
+2. 修改 `Dockerfile` 添加安装步骤
+3. 重新构建镜像：`docker compose build php72`
+
+查看已安装扩展：
+```bash
+docker compose exec php72 php -m
+```
+
+### 4. 查看日志
+
+```bash
+# 查看所有服务日志
+docker compose logs
+
+# 查看特定服务日志
+docker compose logs nginx
+docker compose logs php72
+docker compose logs mysql
+
+# 实时跟踪日志
+docker compose logs -f nginx
+```
+
+### 5. 数据备份
+
+```bash
+# 备份 MySQL 数据
+docker compose exec mysql mysqldump -u root -p --all-databases > backup.sql
+
+# 备份 Redis 数据
+docker compose exec redis redis-cli SAVE
+cp data/redis/dump.rdb backup/
+```
+
+## 六、附录
+
+### 1. 统一设置 .test 域名到本地（macOS）
+
+使用 dnsmasq 可以自动将所有 `.test` 域名解析到本地：
+
+```bash
+# 安装 dnsmasq
+brew install dnsmasq
+
+# 配置 dnsmasq
+echo 'address=/.test/127.0.0.1' >> /usr/local/etc/dnsmasq.conf
+
+# 创建 DNS 解析器
+sudo mkdir -v /etc/resolver
+sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+
+# 启动 dnsmasq
+brew services start dnsmasq
+```
+
+### 2. Xdebug 调试配置
+
+Xdebug 3.x 已预装在镜像中，配置位于 `config/php/php72.ini`。
+
+#### 启用调试
+
+在请求中添加参数：`XDEBUG_TRIGGER=1`
+
+或使用浏览器扩展：
+- [Xdebug Helper (Chrome)](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc)
+- [Xdebug Helper (Firefox)](https://addons.mozilla.org/en-US/firefox/addon/xdebug-helper-for-firefox/)
+
+#### PhpStorm 配置
+
+1. Settings → Languages & Frameworks → PHP → Servers
+   - Name: `laravel.test`
+   - Host: `laravel.test`
+   - Port: `80`
+   - Debugger: `Xdebug`
+
+2. Settings → Languages & Frameworks → PHP → Debug
+   - Port: `9003` (Xdebug 3.x 默认端口)
+
+参考视频：[PhpStorm Xdebug 配置](https://www.bilibili.com/video/BV1nV411b7T3)
+
+### 3. 容器间服务访问
+
+#### 方案一：使用容器名称（推荐）
+
+在 `docker-compose.yml` 中已配置 `extra_hosts`，PHP 容器可以通过域名访问其他服务：
+
 ```yaml
-    extra_hosts:
-      - laravel.test:172.20.128.2 # 此 ip 是nginx容器ip，已经被设置为固定。这样不会因为每次重启，ip 变化的问题
+extra_hosts:
+  - "api.test:nginx"  # 使用 nginx 容器名，自动解析
 ```
+
+#### 方案二：使用服务名称
+
+在 PHP 代码中直接使用服务名：
+
+```php
+// 访问 MySQL
+$host = 'mysql';  // 容器名
+$port = 3306;
+
+// 访问 Redis
+$redis = new Redis();
+$redis->connect('redis', 6379);  // 容器名
+```
+
+### 4. 辅助命令别名（可选）
+
+在 `~/.zshrc` 或 `~/.bashrc` 中添加：
+
+```bash
+# Docker Compose 别名
+alias dup='docker compose up -d'
+alias ddown='docker compose down'
+alias drestart='docker compose restart'
+alias dlogs='docker compose logs -f'
+alias dexec='docker compose exec'
+
+# 快速进入 PHP 容器
+alias dphp='docker compose exec php72 bash'
+```
+
+### 5. 故障排查
+
+#### 服务无法启动
+
+```bash
+# 查看服务状态
+docker compose ps
+
+# 查看详细日志
+docker compose logs [service_name]
+
+# 检查端口占用
+lsof -i :80
+lsof -i :3306
+```
+
+#### 权限问题
+
+```bash
+# 修复数据目录权限
+sudo chown -R $USER:$USER data/
+sudo chmod -R 755 data/
+```
+
+#### 网络问题
+
+```bash
+# 重建网络
+docker compose down
+docker network prune
+docker compose up -d
+```
+
+## 七、更新日志
+
+### 2024 重构版本
+
+- ✅ 更新到 Docker Compose 最新格式（移除 version）
+- ✅ 优化 Dockerfile，使用最佳实践
+- ✅ 改进网络配置，移除静态 IP 依赖
+- ✅ 添加环境变量示例文件
+- ✅ 更新服务版本到最新稳定版
+- ✅ 优化卷挂载，使用缓存模式提升性能
+- ✅ 改进文档，添加更多使用示例
+
+## 八、许可证
+
+MIT License
 

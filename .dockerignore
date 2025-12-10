@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+README.MD
+*.md
+
+# Environment files
+.env
+.env.*
+!.env.example
+env.example
+
+# Docker files
+docker-compose.yml
+.dockerignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Data (don't copy data into image)
+data/
+
+# Resources (keep only what we need)
+resources/*.tar.xz
+resources/*.zip
+!resources/redis-*.tgz
+!resources/mongodb-*.tgz
+!resources/xdebug-*.tgz
+!resources/mcrypt-*.tgz
+
