@@ -79,33 +79,33 @@ services:
       static-network:
         ipv4_address: 172.20.128.5
 
-  sftp:
-    image: atmoz/sftp:${SFTP_VERSION:-latest}
-    container_name: sftp
-    restart: unless-stopped
-    volumes:
-      - ${SFTP_DIR}:/home/${SFTP_USER:-foo}:cached
-    ports:
-      - "${SFTP_PORT:-2222}:22"
-    command: ${SFTP_USER:-foo}:${SFTP_PASSWORD:-pass}:1001:1001
-    networks:
-      static-network:
-        ipv4_address: 172.20.128.6
+  # sftp:
+  #   image: atmoz/sftp:${SFTP_VERSION:-latest}
+  #   container_name: sftp
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${SFTP_DIR}:/home/${SFTP_USER:-foo}:cached
+  #   ports:
+  #     - "${SFTP_PORT:-2222}:22"
+  #   command: ${SFTP_USER:-foo}:${SFTP_PASSWORD:-pass}:1001:1001
+  #   networks:
+  #     static-network:
+  #       ipv4_address: 172.20.128.6
 
-  rmq:
-    image: rabbitmq:${RMQ_VERSION:-3-management-alpine}
-    container_name: rmq
-    restart: unless-stopped
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RMQ_USER:-guest}
-      RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD:-guest}
-      TZ: ${TZ:-Asia/Shanghai}
-    ports:
-      - "${RMQ_WEB_PORT:-15672}:15672"
-      - "${RMQ_PORT:-5672}:5672"
-    networks:
-      static-network:
-        ipv4_address: 172.20.128.7
+  # rmq:
+  #   image: rabbitmq:${RMQ_VERSION:-3-management-alpine}
+  #   container_name: rmq
+  #   restart: unless-stopped
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: ${RMQ_USER:-guest}
+  #     RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD:-guest}
+  #     TZ: ${TZ:-Asia/Shanghai}
+  #   ports:
+  #     - "${RMQ_WEB_PORT:-15672}:15672"
+  #     - "${RMQ_PORT:-5672}:5672"
+  #   networks:
+  #     static-network:
+  #       ipv4_address: 172.20.128.7
 
 networks:
   static-network:
