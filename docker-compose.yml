@@ -79,18 +79,18 @@ services:
       static-network:
         ipv4_address: 172.20.128.5
 
-  # sftp:
-  #   image: atmoz/sftp:${SFTP_VERSION:-latest}
-  #   container_name: sftp
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ${SFTP_DIR}:/home/${SFTP_USER:-foo}:cached
-  #   ports:
-  #     - "${SFTP_PORT:-2222}:22"
-  #   command: ${SFTP_USER:-foo}:${SFTP_PASSWORD:-pass}:1001:1001
-  #   networks:
-  #     static-network:
-  #       ipv4_address: 172.20.128.6
+  sftp:
+   image: atmoz/sftp:${SFTP_VERSION:-latest}
+   container_name: sftp
+   restart: unless-stopped
+   volumes:
+     - ${SFTP_DIR}:/home/${SFTP_USER:-foo}:cached
+   ports:
+     - "${SFTP_PORT:-2222}:22"
+   command: ${SFTP_USER:-foo}:${SFTP_PASSWORD:-pass}:1001:1001
+   networks:
+     static-network:
+       ipv4_address: 172.20.128.6
 
   # rmq:
   #   image: rabbitmq:${RMQ_VERSION:-3-management-alpine}
