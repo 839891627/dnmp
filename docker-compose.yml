@@ -92,20 +92,20 @@ services:
      static-network:
        ipv4_address: 172.20.128.6
 
-  # rmq:
-  #   image: rabbitmq:${RMQ_VERSION:-3-management-alpine}
-  #   container_name: rmq
-  #   restart: unless-stopped
-  #   environment:
-  #     RABBITMQ_DEFAULT_USER: ${RMQ_USER:-guest}
-  #     RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD:-guest}
-  #     TZ: ${TZ:-Asia/Shanghai}
-  #   ports:
-  #     - "${RMQ_WEB_PORT:-15672}:15672"
-  #     - "${RMQ_PORT:-5672}:5672"
-  #   networks:
-  #     static-network:
-  #       ipv4_address: 172.20.128.7
+  rmq:
+    image: rabbitmq:${RMQ_VERSION:-3-management-alpine}
+    container_name: rmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD:-guest}
+      TZ: ${TZ:-Asia/Shanghai}
+    ports:
+      - "${RMQ_WEB_PORT:-15672}:15672"
+      - "${RMQ_PORT:-5672}:5672"
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.7
 
 networks:
   static-network:
