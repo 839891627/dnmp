@@ -220,18 +220,70 @@ cp data/redis/dump.rdb backup/
 使用 dnsmasq 可以自动将所有 `.test` 域名解析到本地：
 
 ```bash
-# 安装 dnsmasq
+# 1. 安装 dnsmasq
 brew install dnsmasq
 
-# 配置 dnsmasq
-echo 'address=/.test/127.0.0.1' >> /usr/local/etc/dnsmasq.conf
+# 2. 检查 Homebrew 安装路径（Apple Silicon 使用 /opt/homebrew）
+# Intel Mac: /usr/local/etc/dnsmasq.conf
+# Apple Silicon: /opt/homebrew/etc/dnsmasq.conf
 
-# 创建 DNS 解析器
+# 3. 配置 dnsmasq（根据实际情况选择路径）
+# Apple Silicon (M芯片)
+echo 'address=/.test/127.0.0.1' | sudo tee -a /opt/homebrew/etc/dnsmasq.conf
+echo 'listen-address=127.0.0.1' | sudo tee -a /opt/homebrew/etc/dnsmasq.conf
+
+# 或者 Intel Mac
+echo 'address=/.test/127.0.0.1' | sudo tee -a /usr/local/etc/dnsmasq.conf
+echo 'listen-address=127.0.0.1' | sudo tee -a /usr/local/etc/dnsmasq.conf
+
+# 4. 创建 DNS 解析器
 sudo mkdir -v /etc/resolver
 sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
 
-# 启动 dnsmasq
+# 5. 启动 dnsmasq
 brew services start dnsmasq
+
+# 6. 验证配置
+brew services list | grep dnsmasq
+dig laravel.test @127.0.0.1
+# 应该返回：laravel.test. IN A 127.0.0.1
+```
+
+#### 故障排查
+
+**如果遇到服务启动失败（error 2）：**
+
+```bash
+# 查看系统日志找出具体错误
+log show --predicate 'process == "dnsmasq"' --last 5m --info
+
+# 常见问题 1：端口 53 被占用
+sudo lsof -i :53
+# 解决方法：如果有多个 dnsmasq 进程，kill 旧的
+sudo kill <PID>
+
+# 常见问题 2：配置文件错误
+# 测试配置文件语法
+sudo dnsmasq --test -C /opt/homebrew/etc/dnsmasq.conf
+
+# 重启服务
+sudo brew services restart dnsmasq
+```
+
+**关于 `brew services list` 显示 `error 2`：**
+
+这是 Apple Silicon (M芯片) Mac 上的已知问题，但**不影响实际功能**。只要 DNS 解析正常（dig 测试通过），就可以正常使用。
+
+**备选方案（简单但手动）：**
+
+如果 dnsmasq 遇到问题，可以直接编辑 hosts 文件：
+
+```bash
+# 编辑 hosts 文件
+sudo nano /etc/hosts
+# 添加：127.0.0.1 laravel.test
+# 添加：127.0.0.1 fund-api.test
+# 保存后即可使用
 ```
 
 ### 2. Xdebug 调试配置
